@@ -386,7 +386,7 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 		}
 
 		export_warning->hide();
-		export_button->set_disabled(true);
+		// export_button->set_disabled(true);
 	} else {
 		if (error != String()) {
 			Vector<String> items = error.split("\n", false);
