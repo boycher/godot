@@ -262,7 +262,11 @@ void GroupsEditor::_update_tree() {
 		TreeItem *item = tree->create_item(local_root);
 		item->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
 		item->set_editable(0, _can_edit(E));
-		item->set_checked(0, current_groups.find(E) != nullptr);
+		bool is_group_enabled = current_groups.find(E) != nullptr;
+		item->set_checked(0, is_group_enabled);
+		if (!is_group_enabled) {
+			item->set_custom_color(0, get_theme_color(SNAME("font_disabled_color"), EditorStringName(Editor)));
+		}
 		item->set_text(0, E);
 		item->set_meta("__local", true);
 		item->set_meta("__name", E);
@@ -294,7 +298,11 @@ void GroupsEditor::_update_tree() {
 		TreeItem *item = tree->create_item(global_root);
 		item->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
 		item->set_editable(0, _can_edit(E));
-		item->set_checked(0, current_groups.find(E) != nullptr);
+		bool is_group_enabled = current_groups.find(E) != nullptr;
+		item->set_checked(0, is_group_enabled);
+		if (!is_group_enabled) {
+			item->set_custom_color(0, get_theme_color(SNAME("font_disabled_color"), EditorStringName(Editor)));
+		}
 		item->set_text(0, E);
 		item->set_meta("__local", false);
 		item->set_meta("__name", E);
