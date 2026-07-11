@@ -34,6 +34,7 @@
 
 #include "core/object/object.h"
 
+class Button;
 class ConfirmationDialog;
 class RichTextLabel;
 
@@ -42,6 +43,7 @@ class AndroidEditorGradleRunner : public Object {
 
 	RichTextLabel *output_label = nullptr;
 	ConfirmationDialog *output_dialog = nullptr;
+	Button *copy_output_button = nullptr;
 
 	enum State {
 		STATE_IDLE,
@@ -70,6 +72,8 @@ class AndroidEditorGradleRunner : public Object {
 
 	void _android_gradle_build_failed(const String &p_msg = String());
 	void _android_gradle_build_cancel();
+
+	void _copy_output_to_clipboard();
 
 public:
 	void run_gradle(const String &p_project_path, const String &p_build_path, const String &p_output_path, const String &p_export_format, const List<String> &p_gradle_build_args, const List<String> &p_gradle_copy_args);

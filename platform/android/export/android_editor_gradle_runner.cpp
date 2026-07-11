@@ -39,6 +39,7 @@
 #include "editor/settings/editor_settings.h"
 #include "scene/gui/dialogs.h"
 #include "scene/gui/rich_text_label.h"
+#include "servers/display/display_server.h"
 
 void AndroidEditorGradleRunner::run_gradle(const String &p_project_path, const String &p_build_path, const String &p_output_path, const String &p_export_format, const List<String> &p_gradle_build_args, const List<String> &p_gradle_copy_args) {
 	project_path = p_project_path;
@@ -60,10 +61,14 @@ void AndroidEditorGradleRunner::run_gradle(const String &p_project_path, const S
 		output_dialog->add_child(output_label);
 
 		output_dialog->connect("canceled", callable_mp(this, &AndroidEditorGradleRunner::_android_gradle_build_cancel));
+
+		copy_output_button = output_dialog->add_button(TTR("Copy Text"), true);
+		copy_output_button->connect(SceneStringName(pressed), callable_mp(this, &AndroidEditorGradleRunner::_copy_output_to_clipboard));
 	}
 
 	output_label->clear();
 	output_dialog->get_ok_button()->set_disabled(true);
+	copy_output_button->set_disabled(true);
 
 	EditorInterface::get_singleton()->popup_dialog_centered_ratio(output_dialog);
 
@@ -152,6 +157,7 @@ void AndroidEditorGradleRunner::_android_gradle_build_copy_callback(int p_exit_c
 void AndroidEditorGradleRunner::_android_gradle_build_clean_project(bool p_was_successful) {
 	if (state != STATE_CLEANING) {
 		state = STATE_CLEANING;
+		copy_output_button->set_disabled(false);
 
 		if (p_was_successful) {
 			output_dialog->hide();
@@ -188,6 +194,10 @@ void AndroidEditorGradleRunner::_android_gradle_build_failed(const String &p_msg
 	}
 
 	_android_gradle_build_clean_project(false);
+}
+
+void AndroidEditorGradleRunner::_copy_output_to_clipboard() {
+	DisplayServer::get_singleton()->clipboard_set(output_label->get_parsed_text());
 }
 
 void AndroidEditorGradleRunner::_android_gradle_build_cancel() {
